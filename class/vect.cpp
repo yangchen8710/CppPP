@@ -7,10 +7,11 @@ using std::cos;
 using std::atan;
 using std::atan2;
 using std::cout;
+using std::endl;
 
 namespace VECTOR
 {
-	const double Rad_to_deg = 45.0 / atan(1.0);
+	static const double Rad_to_deg = 45.0 / atan(1.0);
 	void Vector::set_mag()
 	{
 		mag = sqrt(x * x + y * y);
@@ -18,7 +19,7 @@ namespace VECTOR
 
 	void Vector::set_ang()
 	{
-		if(x == 0.0 ^^ y == 0.0)
+		if(x == 0.0 && y == 0.0)
 			ang = 0.0;
 		else
 			ang = atan2(y, x);
@@ -26,7 +27,7 @@ namespace VECTOR
 
 	void Vector::set_x()
 	{
-		y = mag * cos(ang);
+		x = mag * cos(ang);
 	}
 	
 	void Vector::set_y()
@@ -50,7 +51,7 @@ namespace VECTOR
 			set_ang();
 			set_mag();
 		}
-		else if (form = POL)
+		else if (form == POL)
 		{
 			mag = n1;
 			ang = n2 / Rad_to_deg;
@@ -76,7 +77,7 @@ namespace VECTOR
 			set_ang();
 			set_mag();
 		}
-		else if (form = POL)
+		else if (form == POL)
 		{
 			mag = n1;
 			ang = n2 / Rad_to_deg;
@@ -118,3 +119,29 @@ namespace VECTOR
 	{
 		return Vector(-x, -y);
 	}
+
+	Vector Vector::operator*(double n) const
+	{
+		return Vector(n * x, n * y);
+	}
+
+	Vector operator*(double n, const Vector & a)
+	{
+		return a * n;
+	}
+
+	std::ostream & operator<<(std::ostream & os, const Vector & v)
+	{
+		if (v.mode == Vector::RECT)
+		{
+			os<< "(x,y) = ("<< v.x << ", " << v.y << ")";
+		}
+		else if (v.mode == Vector::POL)
+		{
+			os<< "(m,a) = ("<< v.mag << ", " << v.ang * Rad_to_deg << ")";
+		}
+		else 
+			os<< "Vector object mode is invalid";
+		return os;
+	}
+}
